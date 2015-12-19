@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from CoreApp.views import Home, Login, Logout
+from CoreApp.views import Home, Login, Logout, addTasks, addProject
 
 urlpatterns = [
+    url(r'add-project$',      addProject.as_view(),   name='AddProject'),
+    url(r'add-task$',      addTasks.as_view(),   name='AddTasks'),
     url(r'login$',      Login.as_view(),   name='Login'),
     url(r'logout$',     Logout.as_view(),   name='Logout'),
-    url(r'home$',           Home.as_view(),   name='Home'),
+    url(r'^$',           Home.as_view(),   name='Home'),
 
 ]

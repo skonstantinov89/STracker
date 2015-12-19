@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-12">
+        <!--Simple table example -->
+      <div class="panel-default"><br/>
+        <div class="col-md-offset-5">
+          <i class="fa fa-bar-chart-o fa-fw"></i> Добави нова задача
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-6 col-md-offset-3">
+              <form method='post' class='form-group'>
+                {% csrf_token %}
+                  <label> Заглавие </label>
+                  <input class='form-control' type="text" name="header" placeholder="Заглавие">
+                  <label> Приоритет </label>
+                  <select class="form-control" name="priority">
+                    <option value='low'> Нисък </option>
+                    <option value='normal'> Среден </option>
+                    <option value='high'> Висок </option>
+                    <option value='extreme'> Висока спешност </option>
+                  </select>
+                  <label> Кратко описание на проблема </label>
+                  <textarea class='form-control' name='comment' rows='3'> </textarea>
+                  <label> Избор на проект </label>
+                  <select class="form-control" name="project">
+                    {% for eachProject in projects%}
+                      <option value='{{eachProject.id}}'> {{eachProject.name}} </option>
+                    {%endfor%}
+                  </select>
+                    <button class='form-control btn-success' type='submit'> Добави </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock content%}
