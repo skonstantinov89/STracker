@@ -8,40 +8,47 @@ from django.db.models import Q
 from django.http import Http404
 from django.db import IntegrityError
 
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+
 
 
 # Create your views here.
 
-class Login(View):
-    def get(self,request):
-        context = RequestContext(request)
-        return render_to_response('core/login.html', context)
+# class Login(View):
+#     def get(self,request):
+#         context = RequestContext(request)
+#         return render_to_response('core/login.html', context)
 
-    def post(self, request):
-        context = RequestContext(request)
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('/home', context)
-        else:
-            return redirect('/logout', context)
-class Logout(View):
-    def get(self,request):
-        context = RequestContext(request)
-        logout(request)
-        return redirect('/home', context)
+#     def post(self, request):
+#         context = RequestContext(request)
+#         username = request.POST.get('username', '')
+#         password = request.POST.get('password', '')
+#         user = authenticate(username=username, password=password)
+#         if user is not None:
+#             if user.is_active:
+#                 login(request, user)
+#                 return redirect('/home', context)
+#         else:
+#             return redirect('/logout', context)
+# class Logout(View):
+#     def get(self,request):
+#         context = RequestContext(request)
+#         logout(request)
+#         return redirect('/home', context)
 
-    def post(self, request):
-        context = RequestContext(request)
-        logout(request)
+#     def post(self, request):
+#         context = RequestContext(request)
+#         logout(request)
 
-class Home(LoginRequiredMixin, View):
+class Home(LoginRequiredMixin, APIView):
     """
     This function render the content for the home page of the application after the user is loged in
     """
+    renderer_classes = (JSONRenderer, )
+
     def get(self,request):
         context = RequestContext(request)
         taskData = Tickets.objects.filter(~Q(status='finished'))
@@ -51,7 +58,7 @@ class Home(LoginRequiredMixin, View):
             'username': request.user.username,
             'email': request.user.email
         }
-        return render_to_response('core/dashboard.html', locals(), context)
+        return Response(user)
     def post(self,request):
         context = RequestContext(request)
         raise Http404("Operation is not allowed!")
